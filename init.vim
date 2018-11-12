@@ -5,7 +5,7 @@
 " ----Plugins---- {{{
 
 " Auto-download plug.vim if not found, install it, and reload.
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
+if empty(glob('$HOME/.config/nvim/autoload/plug.vim'))
 	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	autocmd VimEnter *PlugInstal --sync | source $MYVIMRC
 endif
@@ -29,6 +29,8 @@ Plug 'chriskempson/vim-tomorrow-theme'
 " Useful stuff
 Plug 'lervag/vimtex'
 Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-rooter'
+Plug 'w0rp/ale'
 
 " NERD Tree - tree explorer
 " https://github.com/scrooloose/nerdtree
@@ -43,7 +45,7 @@ Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 
-" further airline config
+" further airline sonfig
 " Automagically display all buffers when there's only one tab open
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
@@ -69,6 +71,8 @@ colorscheme Tomorrow-Night
 
 " }}}
 
+let mapleader = ","
+
 " file type recognition
 filetype on
 filetype plugin on
@@ -81,18 +85,26 @@ nmap <leader>l :set list!<CR>
 set listchars=tab:▸\ ,eol:¬
 set list
 
+set wrap
+set linebreak
+command! -nargs=* Wrap set wrap linebreak nolist
+
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
 " you can do this with the ftplugin folder, I think
-autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
+autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
 
 " treat .rss files as XML
 autocmd BufNewFile,BufRead *.rss setfiletype xml
 
 
 " ----Keyboard Shortcuts and quick functions----{{{
+
+" source vimrc when it's saved
+autocmd BufWritePost $HOME/.config/nvim/init.vim source $MYVIMRC
+nmap <leader>v :tabedit $MYVIMRC<CR>
 
 " strip trailing whitespaces
 nnoremap <silent> <F5> :call <SID> StripTrailingWhitespaces()<CR>
@@ -110,12 +122,17 @@ endfunction
 " Run it automagically when file is saved
 " autocmd BufWritePre *.py,*.js :call <SID>StripTrailingWhitespaces()
 
+" toggle spell checking on and off with `<leader>s`
+nmap <silent> <leader>s :set spell!<CR>
+" set region to US english
+set spelllang=en_us
+
 " }}}
 
 
 " ----Set things---- {{{
 
-set hidden
+" set hidden
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
